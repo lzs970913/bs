@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.desensitization.mapper.login.loginMapper">
+
+    <resultMap id="userInfoResult" type="com.desensitization.model.login.User">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="role_id" property="roleId"/>
+    </resultMap>
+    <insert id="addUser">
+        insert into user_info(name,password,role_id,gender,age) values (#{name},#{password},#{roleId},#{gender},#{age})
+    </insert>
+    <select id="getUserInfoByName" parameterType="java.lang.String" resultMap="userInfoResult">
+        select name,password,role_id from user_info where name=#{name}
+    </select>
+</mapper>

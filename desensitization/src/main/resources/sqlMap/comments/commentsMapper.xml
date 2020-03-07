@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.desensitization.mapper.comments.CommentsMapper">
+
+    <resultMap id="comments" type="com.desensitization.model.comments.Comments">
+        <id column="id" property="id"></id>
+        <result column="description" property="description"/>
+        <result column="commnents_user" property="commnentsUser"/>
+        <result column="room_id" property="roomId"/>
+        <association property="roomInfo" javaType="com.desensitization.model.room.RoomInfo">
+            <result column="rname" property="name"/>
+        </association>
+        <association property="user" javaType="com.desensitization.model.login.User">
+            <result column="uname" property="name"/>
+        </association>
+    </resultMap>
+
+    <insert id="addComments">
+        insert into comments (description,comments_user,room_id) values(#{description},#{commnentsUser},#{roomId})
+    </insert>
+    <delete id="deleteComments">
+        delete from comments where id=#{id}
+    </delete>
+    <select id="getAllComments" resultMap="comments">
+        SELECT
+            c.id,
+            c.description,
+            ri.`name` as rname,
+            ui.name as uname
+        FROM
+            comments c
+        LEFT JOIN room_info ri ON c.room_id = ri.id
+        LEFT JOIN user_info ui ON ui.id = c.comments_user
+    </select>
+    <select id="getAllCommentsByUserId" resultMap="comments">
+         SELECT
+            c.id,
+            c.description,
+            ri.`name`
+        FROM
+            comments c
+        LEFT JOIN room_info ri ON c.room_id = ri.id
+        LEFT JOIN user_info ui ON ui.id = c.comments_user
+        where c.comments_user=#{id}
+    </select>
+</mapper>

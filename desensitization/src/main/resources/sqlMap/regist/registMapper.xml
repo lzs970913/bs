@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.desensitization.mapper.reginst.registMapper">
+    <insert id="insertUserInfo">
+        insert into user_info(name,password,role_id) values(#{username},#{password},2)
+    </insert>
+    <select id="getAllUserInfoName" resultType="java.lang.String">
+        select name from user_info
+    </select>
+
+</mapper>

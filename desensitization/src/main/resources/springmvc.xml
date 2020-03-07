@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+	<!-- 包扫描仪 -->
+	<context:component-scan base-package="com.desensitization.controller"/>
+	<!-- 视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	<!-- 注解驱动 -->
+	<mvc:annotation-driven/>
+	<!-- 静态资源文件 -->
+	<mvc:resources location="/resource/js/" mapping="/resource/js/**"/>
+	<mvc:resources location="/resource/css/" mapping="/resource/css/**"/>
+	<mvc:resources location="/resource/images/" mapping="/resource/images/**"/>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+						<property name="targetObject">
+							<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+								<property name="serializationInclusion" value="NON_NULL"/>
+							</bean>
+						</property>
+						<property name="targetMethod" value="configure"/>
+						<property name="arguments">
+							<list>
+								<value>FAIL_ON_UNKNOWN_PROPERTIES</value>
+								<value>false</value>
+							</list>
+						</property>
+					</bean>
+				</property>
+			</bean>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8"/>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+			<!-- FastJson -->
+			<bean id="fastJsonHttpMessageConverter"
+				  class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+				<property name="features">
+					<array value-type="com.alibaba.fastjson.serializer.SerializerFeature">
+						<!-- 避免循环引用 -->
+						<value>DisableCircularReferenceDetect</value>
+						<!-- 是否输出值为null的字段 -->
+						<!--<value>WriteMapNullValue</value>-->
+						<!--&lt;!&ndash; 数值字段如果为null,输出为0,而非null &ndash;&gt;-->
+						<!--<value>WriteNullNumberAsZero</value>-->
+						<!--&lt;!&ndash; 字符类型字段如果为null,输出为"",而非null  &ndash;&gt;-->
+						<!--<value>WriteNullStringAsEmpty</value>-->
+						<!--&lt;!&ndash; List字段如果为null,输出为[],而非null &ndash;&gt;-->
+						<!--<value>WriteNullListAsEmpty</value>-->
+						<!--&lt;!&ndash; Boolean字段如果为null,输出为false,而非null &ndash;&gt;-->
+						<!--<value>WriteNullBooleanAsFalse</value>-->
+					</array>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+</beans>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.desensitization.mapper.login.UserMapper">
+<resultMap id="userResult" type="com.desensitization.model.login.User">
+    <id column="id" property="id"></id>
+    <result column="name" property="name"/>
+    <result column="age" property="age"/>
+    <result column="gender" property="gender"/>
+    <result column="username" property="username"/>
+</resultMap>
+    <update id="updataUserInfo">
+        updata user_info set age=#{age},gender=#{gender},name=#{name} where id=#{id}
+    </update>
+    <update id="updataPasswprd">
+        update user_info set password=123456 where id=#{id}
+    </update>
+    <delete id="deleteUserInfoById">
+        delete from user_info where id=#{id}
+    </delete>
+
+    <select id="getUserInfoById" resultMap="userResult">
+        select id,name,age,gender,name from user_info where id=#{id}
+    </select>
+    <select id="getAllUserInfo" resultMap="userResult">
+        select id,name,age,gender,name from user_info where role_id=2
+    </select>
+    <select id="getUserInfoByName" resultMap="userResult">
+        select id,name,age,gender,name from user_info where name=#{name}
+    </select>
+</mapper>

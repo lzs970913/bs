@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.desensitization.mapper.order.orderMapper">
+<resultMap id="orderResult" type="com.desensitization.model.order.Order">
+    <id property="id" column="id"></id>
+    <result column="order_user" property="orderUser"/>
+    <result column="order_room" property="orderRoom"/>
+    <result column="order_startData" property="orderStartData"/>
+    <result column="order_endData" property="orderEndData"/>
+    <result column="order_status" property="orderStatus"/>
+    <association property="roomInfo" javaType="com.desensitization.model.room.RoomInfo">
+        <result column="rname" property="name"/>
+        <result column="rid" property="id"/>
+    </association>
+    <association property="user" javaType="com.desensitization.model.login.User">
+        <result column="uname" property="name"/>
+    </association>
+
+</resultMap>
+    <insert id="addOrder">
+        insert into `order`(order_user,order_room,order_status,order_startData,order_endData) values(#{orderUser},#{orderRoom},#{orderStatus},#{orderStartData},#{orderEndData})
+    </insert>
+    <update id="updataOrderByOrderId">
+       updata order set order_status=#{orderStatus} where id={id}
+    </update>
+    <delete id="deleteOrderById">
+         delete from `order` where id=#{id}
+    </delete>
+
+    <select id="getAllOrderByUserId" resultMap="orderResult">
+          SELECT
+          o.id,
+           ri.id as rid,
+            ri. NAME as rname,
+            ui.name as uname,
+            o.order_startData,
+            o.order_endData,
+            o.order_status
+        FROM
+            `order` o
+        LEFT JOIN room_info ri ON o.order_room = ri.id
+        LEFT JOIN user_info ui ON o.order_user = ui.id
+         WHERE
+	      ui.id =#{id}
+        GROUP BY
+            o.id
+
+    </select>
+    <select id="getOrderInfoById" resultMap="orderResult">
+         SELECT
+           o.id,
+            ri. NAME as rname,
+            ri.id as rid,
+            ui.name as uname,
+            o.order_startData,
+            o.order_endData,
+            o.order_status
+        FROM
+            `order` o
+        LEFT JOIN room_info ri ON o.order_room = ri.id
+        LEFT JOIN user_info ui ON o.order_user = ui.id
+         WHERE
+	      o.id=#{id}
+        GROUP BY
+            o.id
+
+    </select>
+    <select id="getAllOrderInfo" resultMap="orderResult">
+        SELECT
+            o.id,
+             ri.id as rid,
+            ri. NAME as rname,
+            ui.name as uname,
+            o.order_startData,
+            o.order_endData,
+            o.order_status
+        FROM
+            `order` o
+        LEFT JOIN room_info ri ON o.order_room = ri.id
+        LEFT JOIN user_info ui ON o.order_user = ui.id
+        GROUP BY
+            o.id
+    </select>
+    <select id="getMyOrderInfoByUserId" resultMap="orderResult">
+          SELECT
+         o.id,
+          ri.id as rid,
+            ri. NAME as rname,
+            ui.name as uname,
+            o.order_startData,
+            o.order_endData,
+            o.order_status
+        FROM
+            `order` o
+        LEFT JOIN room_info ri ON o.order_room = ri.id
+        LEFT JOIN user_info ui ON o.order_user = ui.id
+        where ui.id=#{id}
+        GROUP BY
+            o.id
+    </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.desensitization.mapper.room.RoomMapper">
+    <resultMap id="roomResult" type="com.desensitization.model.room.RoomInfo">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="description" property="description"/>
+        <result column="state" property="status"/>
+    </resultMap>
+    <insert id="addRoomInfo">
+        insert into room_info(name,price,description,state) values(#{name},#{price},#{description},#{status})
+    </insert>
+    <update id="updataRoomInfoById">
+        update room_info set name=#{name},price=#{price},description=#{description} where id=#{id}
+    </update>
+    <delete id="deleteRoomInfoById">
+        delete from room_info where id=#{id}
+    </delete>
+
+
+    <select id="getAllRoomInfo" resultMap="roomResult">
+        select id,name,price,description,state from room_info
+    </select>
+
+    <select id="getRoomInfoById" resultMap="roomResult">
+         select id,name,price,description,state from room_info where id=#{id}
+    </select>
+</mapper>
